@@ -1,0 +1,59 @@
+@import '../../../styles/variables';
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 24px;
+  border-radius: 12px;
+  background: $color-bg-light;
+  color: $color-text-light;
+  width: 100%;
+  min-width: 320px;
+  max-width: 560px;
+
+  &.dark {
+    background: $color-bg-dark;
+    color: $color-text-dark;
+  }
+
+  input {
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+
+    &:focus {
+      outline: none;
+      border-color: $color-primary;
+      box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+    }
+  }
+}
+
+.error-message {
+  color: $color-error;
+  font-size: 0.85rem;
+}
+
+button[type='submit'] {
+  margin-top: 8px;
+  padding: 12px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+  background-color: $color-primary;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.2s;
+
+  &:hover {
+    background-color: darken($color-primary, 10%);
+  }
+}
+
+.switch {
+  cursor: pointer;
+  color: $color-primary;
+  margin-top: 8px;
+}

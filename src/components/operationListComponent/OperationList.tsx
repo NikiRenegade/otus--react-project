@@ -27,7 +27,7 @@ export function OperationList({ operations }: OperationListProps) {
   }, []);
 
   return (
-    <div className={`${styles.operation - list} ${styles[theme]}`} data-test={theme}>
+    <div className={`${styles['operation-list']} ${styles[theme]}`} data-test={theme}>
       {list.map((operation, index) => (
         <div className={styles['operation-list__item']} key={index}>
           <OperationShortMemo operation={operation} />
