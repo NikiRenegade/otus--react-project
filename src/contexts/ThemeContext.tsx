@@ -9,7 +9,9 @@ interface ThemeContextProps {
 
 export const ThemeContext = createContext<ThemeContextProps>({
   theme: 'dark',
-  toggleTheme: () => {},
+  toggleTheme: () => {
+    throw new Error('Not implemented!');
+  },
 });
 
 type ThemeProviderProps = {

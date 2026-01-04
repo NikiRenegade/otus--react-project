@@ -9,7 +9,9 @@ interface LanguageContextProps {
 
 export const LanguageContext = createContext<LanguageContextProps>({
   language: 'rus',
-  toggleLanguage: () => {},
+  toggleLanguage: () => {
+    throw new Error('Not implemented!');
+  },
 });
 
 type LanguageProviderProps = {
