@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { OperationFull } from './OperationFull';
+import { ThemeProvider } from '../../contexts/ThemeContext';
+import React from 'react';
 
 const meta: Meta<typeof OperationFull> = {
   title: 'Components/OperationFull',
@@ -12,6 +14,13 @@ const meta: Meta<typeof OperationFull> = {
     dateTime: { control: 'text' },
     categoryColor: { control: 'text' },
   },
+  decorators: [
+    (Story) => (
+      <ThemeProvider>
+        <Story />
+      </ThemeProvider>
+    ),
+  ],
 };
 
 export default meta;
