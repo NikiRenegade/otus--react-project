@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import { OperationShortMemo } from './OperationShort';
+import { OperationShort } from './OperationShort';
 import { ThemeProvider } from '../../contexts/ThemeContext';
 import React from 'react';
 import { OperationShortModel } from 'src/entities/OperationShortModel';
@@ -13,9 +13,9 @@ const onEdit = (op: OperationShortModel) => {
   console.log('onEdit', op);
 };
 
-const meta: Meta<typeof OperationShortMemo> = {
+const meta: Meta<typeof OperationShort> = {
   title: 'Components/OperationShort',
-  component: OperationShortMemo,
+  component: OperationShort,
   argTypes: {
     operation: { control: 'object' },
   },
@@ -29,7 +29,7 @@ const meta: Meta<typeof OperationShortMemo> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof OperationShortMemo>;
+type Story = StoryObj<typeof OperationShort>;
 
 export const Positive: Story = {
   args: {
