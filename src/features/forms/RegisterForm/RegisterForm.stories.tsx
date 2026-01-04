@@ -3,7 +3,7 @@ import { RegisterForm } from './RegisterForm';
 import { ThemeProvider } from '../../../contexts/ThemeContext';
 import React from 'react';
 
-const meta: Meta<typeof LoginForm> = {
+const meta: Meta<typeof RegisterForm> = {
   title: 'Form/RegisterForm',
   component: RegisterForm,
   decorators: [

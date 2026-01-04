@@ -9,8 +9,8 @@
   background: $color-bg-light;
   color: $color-text-light;
   width: 100%;
-  min-width: 320px;
   max-width: 560px;
+  box-sizing: border-box;
 
   &.dark {
     background: $color-bg-dark;
@@ -30,6 +30,7 @@
     }
   }
 }
+
 
 .error-message {
   color: $color-error;

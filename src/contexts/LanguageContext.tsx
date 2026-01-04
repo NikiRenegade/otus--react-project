@@ -1,4 +1,4 @@
-import React, { createContext } from 'react';
+import React, { createContext, useState } from 'react';
 import i18n from '../i18n/i18n';
 export type Language = 'rus' | 'eng';
 

@@ -1,3 +1,4 @@
+@import '../../styles/variables';
 .operation-full {
   display: flex;
   flex-direction: column;
@@ -64,5 +65,25 @@
     position: absolute;
     top: 10px;
     right: 10px;
+  }
+
+  &.light {
+    background-color: $color-bg-light;
+    color: $color-text-light;
+
+    & .operation-full__category,
+    & .operation-full__description {
+      color: #979797;
+    }
+  }
+
+  &.dark {
+    background-color: $color-bg-dark;
+    color: $color-text-dark;
+
+    & .operation-full__category,
+    & .operation-full__description {
+      color: #c0c0c0;
+    }
   }
 }

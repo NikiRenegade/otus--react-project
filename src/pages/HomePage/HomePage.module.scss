@@ -1,0 +1,42 @@
+@import '../../styles/variables';
+.home {
+  text-align: center;
+  padding: 60px 20px;
+  height: 100%;
+  width: 100%;
+
+  &.light {
+    background-color: $color-bg-light;
+    color: $color-text-light;
+  }
+
+  &.dark {
+    background-color: $color-bg-dark;
+    color: $color-text-dark;
+  }
+
+  h1 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+  }
+
+  p {
+    font-size: 1.2rem;
+    margin-bottom: 40px;
+  }
+
+  &__start {
+    padding: 14px 28px;
+    font-size: 1rem;
+    border-radius: 10px;
+    border: none;
+    background-color: $color-primary;
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.2s;
+
+    &:hover {
+      background-color: darken($color-primary, 10%);
+    }
+  }
+}
