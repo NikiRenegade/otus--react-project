@@ -76,12 +76,14 @@ export const createRandomOperationShort = (): OperationShortModel => {
   const randomOperationCategory: OperationCategory = categories[Math.floor(Math.random() * categories.length)];
   return isCost
     ? {
+        id: 'randomId',
         title: `Трата на : ${randomOperationCategory.name}`,
         description: Math.random() < 0.5 ? 'Описание траты' : undefined,
         amount: randomAmount,
         category: randomOperationCategory.name,
       }
     : {
+        id: 'randomId',
         title: `Доход от : ${randomOperationCategory.name}`,
         description: Math.random() < 0.5 ? 'Описание дохода' : undefined,
         amount: randomAmount,

@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { LoginForm } from './LoginForm';
 import { ThemeProvider } from '../../../contexts/ThemeContext';
+import { LanguageProvider } from '../../../contexts/LanguageContext';
 import React from 'react';
 
 const meta: Meta<typeof LoginForm> = {
@@ -9,7 +10,9 @@ const meta: Meta<typeof LoginForm> = {
   decorators: [
     (Story) => (
       <ThemeProvider>
-        <Story />
+        <LanguageProvider>
+          <Story />
+        </LanguageProvider>
       </ThemeProvider>
     ),
   ],

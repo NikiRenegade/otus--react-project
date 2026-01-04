@@ -8,9 +8,9 @@
   border-radius: 12px;
   background: $color-bg-light;
   color: $color-text-light;
-  width: 100%;
-  min-width: 320px;
-  max-width: 560px;
+  width: 100%; // растягиваемся по контейнеру Modal
+  max-width: 560px; // максимум для больших экранов
+  box-sizing: border-box;
 
   &.dark {
     background: $color-bg-dark;

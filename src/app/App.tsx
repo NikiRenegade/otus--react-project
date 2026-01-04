@@ -1,29 +1,36 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import './App.css';
-import logo from './logo.svg';
 import { ThemeProvider } from 'src/contexts/ThemeContext';
 import { LanguageProvider } from 'src/contexts/LanguageContext';
+import { Routes, Route } from 'react-router-dom';
+import { AuthContext } from 'src/contexts/AuthContext';
+import AppLayout from 'src/layouts/AppLayout';
+import { ProfilePage } from 'src/pages/ProfilePage/ProfilePage';
+import { OperationPage } from 'src/pages/OperationPage/OperationPage';
+import { NotFoundPage } from 'src/pages/NotFoundPage/NotFoundPage';
+import { HomePage } from 'src/pages/HomePage/HomePage';
 import { Header } from 'src/components/headerComponent/Header';
 
 function App() {
+  const { user } = useContext(AuthContext);
+  const isAuth = Boolean(user);
+
   return (
     <LanguageProvider>
       <ThemeProvider>
-        <Header></Header>
-        <div className="App">
-          <header className="App-header">
-            <img src={logo} className="App-logo" alt="logo" />
-            <h2>Привет, меня зовут Никита!</h2>
-            <h3>Моя цель - Овладеть навыками фронтенд-разработки для стека C# + React</h3>
-            <h3>Технологии, которыми обладаю на данный момент</h3>
-            <ul style={{ marginTop: '0' }}>
-              <li style={{ display: 'flex', alignItems: 'center' }}>Бэкэнд на C# и Java</li>
-              <li style={{ display: 'flex', alignItems: 'center' }}>Верстка на HTML, CSS</li>
-              <li style={{ display: 'flex', alignItems: 'center' }}>Базовые навыки JavaScript, Vue</li>
-              <li style={{ display: 'flex', alignItems: 'center' }}>SQL</li>
-            </ul>
-          </header>
-        </div>
+        <Header />
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+
+          {isAuth && (
+            <Route element={<AppLayout />}>
+              <Route path="/profile" element={<ProfilePage />} />
+              <Route path="/operations" element={<OperationPage />} />
+            </Route>
+          )}
+
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
       </ThemeProvider>
     </LanguageProvider>
   );

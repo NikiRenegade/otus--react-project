@@ -7,49 +7,61 @@
     display: flex;
     justify-content: center;
     align-items: center;
-
+    padding: 24px;
+    box-sizing: border-box;
+    z-index: 1000;
   }
 
   &__window {
     position: relative;
-    background-color: #fff;
-    padding: 20px;
-    width: 300px;
-    height: 200px;
-    border-radius: 10px;
-
-    &.light {
-      background-color:  $color-bg-light;
-      color: $color-text-light;
-    }
+    background-color: $color-bg-light;
+    color: $color-text-light;
+    border-radius: 16px;
+    padding: 32px 40px;
+    width: 100%;
+    box-sizing: border-box;
+    box-shadow: 0 4px 30px rgba(0,0,0,0.2);
 
     &.dark {
       background-color: $color-bg-dark;
       color: $color-text-dark;
     }
-
+    &.sm {
+      max-width: 420px;
     }
+
+    &.md {
+      max-width: 560px;
+    }
+
+    &.lg {
+      max-width: 800px;
+    }
+  }
+
+
   &__content {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    align-content: center;
+    gap: 20px;
+    align-items: stretch;
   }
+
   &__close {
     position: absolute;
-    top: 8px;
-    right: 8px;
+    top: 12px;
+    right: 12px;
     background: none;
     border: none;
-    font-size: 20px;
+    font-size: 22px;
     color: #666;
     cursor: pointer;
+    transition: color 0.2s;
 
     &:hover {
-      color: palevioletred;
+      color: $color-primary;
     }
   }
 
 }
+

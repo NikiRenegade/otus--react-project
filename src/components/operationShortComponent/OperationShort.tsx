@@ -24,4 +24,3 @@ function OperationShort({ operation }: OperationShortProps) {
     </div>
   );
 }
-export const OperationShortMemo = React.memo<OperationShortProps>(OperationShort);

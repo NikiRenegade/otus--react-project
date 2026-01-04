@@ -2,49 +2,52 @@ import React, { useContext } from 'react';
 import { useForm } from 'react-hook-form';
 import { ThemeContext } from '../../../contexts/ThemeContext';
 import styles from './LoginForm.module.scss';
+import { useTranslation } from 'react-i18next';
 
 interface LoginValues {
   email: string;
   password: string;
 }
 
-export const LoginForm: React.FC<{ onSwitch: () => void }> = ({ onSwitch }) => {
+interface LoginFormProps {
+  onSwitch: () => void;
+  onSubmit: (values: LoginValues) => void;
+}
+
+export const LoginForm: React.FC<LoginFormProps> = ({ onSwitch, onSubmit }) => {
   const { theme } = useContext(ThemeContext);
+  const { t } = useTranslation();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<LoginValues>({ defaultValues: { email: '', password: '' } });
 
-  const onSubmit = (data: LoginValues) => {
-    console.log('Вход:', data);
-  };
-
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={`${styles.form}  ${styles[theme]}`}>
-      <h2>Вход</h2>
+      <h2> {t('login')}</h2>
 
-      <label>Email*</label>
+      <label>{t('email_cap')}*</label>
       <input
         {...register('email', {
-          required: 'Введите email',
+          required: `${t('enter')} ${t('email_low')}`,
           pattern: {
             value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-            message: 'Введите корректный email',
+            message: `${t('enter')} ${t('valid_low')} ${t('email_low')}`,
           },
         })}
         placeholder="example@gmail.com"
       />
       {errors.email && <span className={styles['error-message']}>{errors.email.message}</span>}
 
-      <label>Пароль*</label>
-      <input type="password" {...register('password', { required: 'Введите пароль' })} />
+      <label>{t('password_cap')}*</label>
+      <input type="password" {...register('password', { required: `${t('enter')} ${t('password_low')}` })} />
       {errors.password && <span className={styles['error-message']}>{errors.password.message}</span>}
 
-      <button type="submit">Войти</button>
+      <button type="submit">{t('login')}</button>
 
       <p className={styles.switch} onClick={onSwitch}>
-        Регистрация
+        {t('register')}
       </p>
     </form>
   );

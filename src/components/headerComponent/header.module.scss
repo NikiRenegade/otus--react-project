@@ -12,13 +12,17 @@
     display: flex;
     align-items: center;
 
-
+    a {
+      display: flex;
+      height: 100%;
+      align-items: center;
+    }
 
     img {
-      height: 100%; /* header 64px → 48px логотип с отступом 8px сверху и снизу */
+      height: 100%;
       width: auto;
-      border-radius: 50%; /* превращаем в круг */
-      object-fit: cover;  /* сохраняем пропорции, обрезая лишнее */
+      border-radius: 50%;
+      object-fit: cover;
     }
   }
 
@@ -29,12 +33,46 @@
     &__link {
       text-decoration: none;
     }
+    &__button {
+      background: transparent;
+      border: 1px solid currentColor;
+      color: inherit;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+        transform: scale(1.05);
+      }
+
+      &:active {
+        transform: scale(0.98);
+      }
+
+      &:focus {
+        outline: 2px solid $color-link-hover;
+        outline-offset: 2px;
+      }
+    }
+
   }
 
   &.light {
     background-color: $color-bg-light;
     color: $color-text-light;
 
+    & .header__nav__button {
+      border-color: $color-text-light;
+      color: $color-text-light;
+
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.05);
+        color: $color-link-hover;
+      }
+    }
     & .header__nav__link {
       color: $color-text-light;
       &:hover {
@@ -47,6 +85,17 @@
     background-color: $color-bg-dark;
     color: $color-text-dark;
 
+
+    & .header__nav__button {
+      border-color: $color-text-dark;
+      color: $color-text-dark;
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+        color: $color-link-hover;
+      }
+    }
+
     & .header__nav__link {
       color: $color-text-dark;
       &:hover {
@@ -54,5 +103,4 @@
       }
     }
   }
-
 }

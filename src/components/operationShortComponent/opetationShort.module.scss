@@ -2,13 +2,31 @@
 
 .operation-short {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   width: 500px;
 
   border: 1px solid #ccc;
   border-radius: 12px;
   padding: 16px;
   margin: 10px;
+
+  &__infrormation{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+  &__actions{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  &__button {
+    background-color: transparent;
+    border-radius: 12px;
+    border: none;
+    font-size: 16px;
+  }
 
   &__right {
     display: flex;
