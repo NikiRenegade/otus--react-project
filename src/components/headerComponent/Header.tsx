@@ -2,19 +2,18 @@ import React, { useContext } from 'react';
 import styles from './header.module.scss';
 import { Logo } from '../logoComponent/Logo';
 import { ThemeSwitcher } from '../themeSwitcherComponent/ThemeSwitcher';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { LanguageSwitcher } from '../languageSwitcherComponent/LanguageSwitcher';
 import { ThemeContext } from '../../contexts/ThemeContext';
 import { useTranslation } from 'react-i18next';
 import { AuthContext } from '../../contexts/AuthContext';
-import { AuthModal } from '../../components/authModalComponent/AuthModal';
 
 export function Header() {
   const { theme } = useContext(ThemeContext);
   const auth = useContext(AuthContext);
   const { t } = useTranslation();
-
-  const [modalOpen, setModalOpen] = React.useState<'login' | 'register' | null>(null);
+  const navigate = useNavigate();
+  const location = useLocation();
   const isAuth = Boolean(auth?.user);
 
   return (
@@ -43,11 +42,22 @@ export function Header() {
             <>
               <button
                 className={styles['header__nav__button']}
-                onClick={() => setModalOpen('login')}
+                onClick={() =>
+                  navigate('/login', { state: { background: location }, replace: location.pathname === '/login' })
+                }
               >
                 {t('login')}
               </button>
-              <button className={styles['header__nav__button']} onClick={() => setModalOpen('register')}>
+
+              <button
+                className={styles['header__nav__button']}
+                onClick={() =>
+                  navigate('/register', {
+                    state: { background: location },
+                    replace: location.pathname === '/register',
+                  })
+                }
+              >
                 {t('register')}
               </button>
             </>
@@ -57,8 +67,6 @@ export function Header() {
         <ThemeSwitcher />
         <LanguageSwitcher />
       </header>
-
-      {modalOpen && <AuthModal mode={modalOpen} onClose={() => setModalOpen(null)} onSwitch={setModalOpen} />}
     </>
   );
 }
