@@ -1,22 +1,22 @@
 import React, { useState, useContext } from 'react';
 import styles from './operationList.module.scss';
-import { OperationShortModel } from '../../entities/OperationShortModel';
+import { Operation } from '../../entities/Operation';
 import { OperationShort } from '../operationShortComponent/OperationShort';
 import { ThemeContext } from '../../contexts/ThemeContext';
 interface OperationListProps {
-  operations: OperationShortModel[];
-  onView: (op: OperationShortModel) => void;
-  onEdit: (op: OperationShortModel) => void;
+  operations: Operation[];
+  onView: (op: Operation) => void;
+  onEdit: (op: Operation) => void;
+  onDelete: (id: string) => void;
 }
 
-export function OperationList({ operations, onView, onEdit }: OperationListProps) {
+export function OperationList({ operations, onView, onEdit, onDelete }: OperationListProps) {
   const { theme } = useContext(ThemeContext);
-  const [list, _] = useState<OperationShortModel[]>(operations);
   return (
     <div className={`${styles['operation-list']} ${styles[theme]}`} data-test={theme}>
-      {list.map((operation, index) => (
-        <div className={styles['operation-list__item']} key={index}>
-          <OperationShort operation={operation} onView={onView} onEdit={onEdit} />
+      {operations.map((operation) => (
+        <div className={styles['operation-list__item']} key={operation.id}>
+          <OperationShort operation={operation} onView={onView} onEdit={onEdit} onDelete={onDelete} />
         </div>
       ))}
     </div>

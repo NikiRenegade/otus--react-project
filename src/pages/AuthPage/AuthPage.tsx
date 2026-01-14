@@ -11,10 +11,8 @@ export const AuthPage: React.FC = () => {
     if (!user) {
       return;
     }
-    console.log(user);
   };
   const handleRegister = (data: { email: string; password: string }) => {
-    console.log('регистрация', data);
   };
   return (
     <div style={{ maxWidth: 420, margin: '40px auto' }}>

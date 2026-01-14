@@ -1,10 +1,10 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Modal } from '../modalComponent/Modal';
 import { LoginForm } from '../../features/forms/LoginForm/LoginForm';
 import { RegisterForm } from '../../features/forms/RegisterForm/RegisterForm';
-import { users } from '../../entities/User';
-import { AuthContext } from '../../contexts/AuthContext';
-
+import { useDispatch } from 'react-redux';
+import { login } from '../../store/slices/authSlice';
+import { AppDispatch } from '../../store/index';
 type AuthMode = 'login' | 'register';
 
 interface AuthModalProps {
@@ -14,20 +14,13 @@ interface AuthModalProps {
 }
 
 export const AuthModal: React.FC<AuthModalProps> = ({ mode, onClose, onSwitch }) => {
-  const { login } = useContext(AuthContext);
+  const dispatch = useDispatch<AppDispatch>();
 
   const handleLogin = (data: { email: string; password: string }) => {
-    const user = users.find((u) => u.email === data.email && u.password === data.password);
-
-    if (!user) {
-      return;
-    }
-
-    login(user);
+    dispatch(login(data));
     onClose();
   };
   const handleRegister = (data: { email: string; password: string }) => {
-    console.log('регистрация', data);
     onClose();
   };
 
