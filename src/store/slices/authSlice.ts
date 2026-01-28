@@ -9,7 +9,6 @@ interface AuthState {
 }
 
 const tokenFromLocalStorage = localStorage.getItem('token');
-
 const initionalState: AuthState = {
   token: tokenFromLocalStorage,
   user: tokenFromLocalStorage ? users[0] : null,
@@ -29,6 +28,7 @@ const authSlice = createSlice({
       }
     },
     logout(state: AuthState) {
+      localStorage.removeItem('token');
       state.authenticated = false;
       state.user = null;
       state.token = null;
