@@ -3,13 +3,20 @@ import styles from './operationFull.module.scss';
 import { ThemeContext } from '../../contexts/ThemeContext';
 interface OperationFullProps {
   title: string;
-  category: string;
+  categoryName: string;
   description: string;
   amount: number;
   dateTime: string;
   categoryColor: string;
 }
-export function OperationFull({ title, category, description, amount, dateTime, categoryColor }: OperationFullProps) {
+export function OperationFull({
+  title,
+  categoryName,
+  description,
+  amount,
+  dateTime,
+  categoryColor,
+}: OperationFullProps) {
   const { theme } = useContext(ThemeContext);
   const parsedDate = new Date(dateTime);
 
@@ -32,8 +39,10 @@ export function OperationFull({ title, category, description, amount, dateTime, 
       </div>
       <div className={styles['operation-full__main']}>
         <div className={styles['operation-full__title']}>{title}</div>
-        <div className={styles['operation-full__category']}>{category}</div>
-        <h3 className={`${styles['operation-full__amount']} ${amount > 0 ? styles.positive : styles.negative}`}>{amount}</h3>
+        <div className={styles['operation-full__category']}>{categoryName}</div>
+        <h3 className={`${styles['operation-full__amount']} ${amount > 0 ? styles.positive : styles.negative}`}>
+          {amount}
+        </h3>
       </div>
       <div className={styles['operation-full__footer']}>
         <p className={styles['operation-full__description']}>{description}</p>

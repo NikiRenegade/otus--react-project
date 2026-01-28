@@ -6,16 +6,17 @@ import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { LanguageSwitcher } from '../languageSwitcherComponent/LanguageSwitcher';
 import { ThemeContext } from '../../contexts/ThemeContext';
 import { useTranslation } from 'react-i18next';
-import { AuthContext } from '../../contexts/AuthContext';
+import { AppDispatch, State } from '../../store/index';
+import { useSelector, useDispatch } from 'react-redux';
+import { logout } from '../../store/slices/authSlice';
 
 export function Header() {
   const { theme } = useContext(ThemeContext);
-  const auth = useContext(AuthContext);
   const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
-  const isAuth = Boolean(auth?.user);
-
+  const isAuth = useSelector((state: State) => state.auth.authenticated);
+  const dispatch = useDispatch<AppDispatch>();
   return (
     <>
       <header className={`${styles.header} ${styles[theme]}`}>
@@ -34,7 +35,7 @@ export function Header() {
               <NavLink className={styles['header__nav__link']} to="/operations">
                 {t('my_operations')}
               </NavLink>
-              <button className={styles['header__nav__button']} onClick={auth.logout}>
+              <button className={styles['header__nav__button']} onClick={() => dispatch(logout())}>
                 {t('logout')}
               </button>
             </>

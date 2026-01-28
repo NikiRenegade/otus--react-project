@@ -3,15 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { OperationShort } from './OperationShort';
 import { ThemeProvider } from '../../contexts/ThemeContext';
 import React from 'react';
-import { OperationShortModel } from 'src/entities/OperationShortModel';
-
-const onView = (op: OperationShortModel) => {
-  console.log('onView', op);
-};
-
-const onEdit = (op: OperationShortModel) => {
-  console.log('onEdit', op);
-};
+import { categories } from 'src/entities/Category';
 
 const meta: Meta<typeof OperationShort> = {
   title: 'Components/OperationShort',
@@ -36,9 +28,10 @@ export const Positive: Story = {
     operation: {
       id: 'Positive',
       title: 'Получение заработной платы',
-      category: 'ЗП',
+      categoryId: '1a2b3c4d-0000-0000-0000-000000000005',
       description: 'Оплата за первую половину месяца',
       amount: 150000,
+      category: categories.find((c) => c.id === '1a2b3c4d-0000-0000-0000-000000000005'),
     },
   },
 };
@@ -47,9 +40,10 @@ export const Negative: Story = {
     operation: {
       id: 'Negative',
       title: 'Покупка в магазине',
-      category: 'Продуктовый магазин',
+      categoryId: '1a2b3c4d-0000-0000-0000-000000000001',
       description: 'Ненужная покупка в продуктовом магазине.',
       amount: -5000,
+      category: categories.find((c) => c.id === '1a2b3c4d-0000-0000-0000-000000000001'),
     },
   },
 };

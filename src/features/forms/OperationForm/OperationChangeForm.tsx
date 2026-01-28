@@ -1,84 +1,68 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useContext } from 'react';
 import { useForm } from 'react-hook-form';
 import { Operation } from '../../../entities/Operation';
-import { Category } from '../../../entities/Category';
+import { Category, categories } from '../../../entities/Category';
 import styles from './OperationChangeForm.module.scss';
 import { ThemeContext } from '../../../contexts/ThemeContext';
-
-export const getCategories = (): Category[] => [
-  { id: Math.random().toString(36).substring(2, 9), name: 'Магазин' },
-  { id: Math.random().toString(36).substring(2, 9), name: 'Аренда' },
-  { id: Math.random().toString(36).substring(2, 9), name: 'Одежда' },
-  { id: Math.random().toString(36).substring(2, 9), name: 'Кафе' },
-  { id: Math.random().toString(36).substring(2, 9), name: 'Заработная плата' },
-  { id: Math.random().toString(36).substring(2, 9), name: 'Премия' },
-  { id: Math.random().toString(36).substring(2, 9), name: 'Выполнение заказа' },
-  { id: Math.random().toString(36).substring(2, 9), name: 'Перевод' },
-];
+import { useTranslation } from 'react-i18next';
 
 export interface OperationChangeFormValues {
-  name: string;
-  desc?: string;
+  title: string;
+  description?: string;
   amount: number;
   categoryId: string;
+  category: Category;
 }
 
-export const OperationChangeForm: React.FC<{ initial?: Operation }> = ({ initial }) => {
+export const OperationChangeForm: React.FC<{ initial?: Operation; onSave: (op: Operation) => void }> = ({
+  initial,
+  onSave,
+}) => {
   const { theme } = useContext(ThemeContext);
-  const onSubmit = (data: OperationChangeFormValues) => {
-    if (initial) {
-      const updated: Operation = {
-        ...initial,
-        name: data.name,
-        desc: data.desc,
-        amount: data.amount,
-        category: getCategories().find((c) => c.id === data.categoryId)!,
-      };
-
-      console.log('update:', updated);
-    } else {
-      const newOperation: Operation = {
-        id: crypto.randomUUID(),
-        name: data.name,
-        desc: data.desc,
-        createdAt: new Date().toISOString(),
-        amount: data.amount,
-        category: getCategories().find((c) => c.id === data.categoryId)!,
-      };
-
-      console.log('create:', newOperation);
-    }
-  };
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors },
   } = useForm<OperationChangeFormValues>({
     defaultValues: initial
       ? {
-          name: initial.name,
-          desc: initial.desc || '',
+          title: initial.title,
+          description: initial.description || '',
           amount: initial.amount,
-          categoryId: initial.category.id,
+          categoryId: initial.categoryId,
         }
       : {
-          name: '',
-          desc: '',
+          title: '',
+          description: '',
           amount: 0,
           categoryId: '',
         },
   });
-
-  const [categories, setCategories] = useState<Category[]>([]);
-
-  useEffect(() => {
-    setCategories(getCategories());
-  }, []);
-
+  const { t } = useTranslation();
   const submit = (data: OperationChangeFormValues) => {
-    onSubmit(data);
-    reset();
+    const category = categories.find((c) => c.id === data.categoryId);
+    if (!category) return;
+
+    const operation: Operation = initial
+      ? {
+          ...initial,
+          title: data.title,
+          description: data.description,
+          amount: data.amount,
+          categoryId: data.categoryId,
+          category,
+        }
+      : {
+          id: crypto.randomUUID(),
+          createdAt: new Date().toISOString(),
+          title: data.title,
+          description: data.description,
+          amount: data.amount,
+          categoryId: data.categoryId,
+          category,
+        };
+
+    onSave(operation);
   };
 
   return (
@@ -87,32 +71,32 @@ export const OperationChangeForm: React.FC<{ initial?: Operation }> = ({ initial
       className={`${styles['operation-form']} ${theme === 'dark' ? styles.dark : ''}`}
     >
       <div className={styles['operation-form__item']}>
-        <label>Название операции*</label>
+        <label>{t('operation_name_cap')}*</label>
         <input
-          {...register('name', { required: 'Введите название операции' })}
-          placeholder="Введите название операции"
+          {...register('title', { required: `${t('enter')} ${t('operation_name_low')}` })}
+          placeholder={`${t('enter')} ${t('operation_name_low')}`}
         />
-        {errors.name && <span className={styles['error-message']}>{errors.name.message}</span>}
+        {errors.title && <span className={styles['error-message']}>{errors.title.message}</span>}
       </div>
 
       <div className={styles['operation-form__item']}>
-        <label>Описание операции</label>
+        <label>{t('operation_description_cap')}</label>
         <textarea
-          {...register('desc', { maxLength: { value: 500, message: 'Максимум 500 символов' } })}
-          placeholder="Описание операции"
+          {...register('description', { maxLength: { value: 500, message: `${t('maximum_500_characters')}` } })}
+          placeholder={`${t('enter')} ${t('operation_description_low')}`}
         />
-        {errors.desc && <span className={styles['error-message']}>{errors.desc.message}</span>}
+        {errors.description && <span className={styles['error-message']}>{errors.description.message}</span>}
       </div>
 
       <div className={styles['operation-form__grid']}>
         <div className={styles['operation-form__item-small']}>
-          <label>Сумма операции*</label>
+          <label>{t('operation_amount_cap')};</label>
           <input
             type="number"
             {...register('amount', {
-              required: 'Введите сумму операции',
+              required: `${t('enter')} ${t('operation_amount_low')}`,
               valueAsNumber: true,
-              validate: (v) => v > 0 || 'Введите сумму больше нуля',
+              validate: (v) => v > 0 || v < 0 || `${t('enter_amount_other_than_0')}`,
             })}
             placeholder="0.00"
           />
@@ -120,13 +104,15 @@ export const OperationChangeForm: React.FC<{ initial?: Operation }> = ({ initial
         </div>
 
         <div className={styles['operation-form__item-small']}>
-          <label>Категория операции*</label>
+          <label>{t('operation_category_cap')}*</label>
           <select
             {...register('categoryId', {
-              required: 'Выберите категорию',
+              required: `${t('select')} ${t('operation_category_low')}`,
             })}
           >
-            <option value="">-- выбрать --</option>
+            <option value="">
+              -- {t('select')} {t('operation_category_low')} --
+            </option>
             {categories.map((c) => (
               <option key={c.id} value={c.id}>
                 {c.name}
@@ -138,7 +124,7 @@ export const OperationChangeForm: React.FC<{ initial?: Operation }> = ({ initial
       </div>
 
       <button type="submit" className={styles['operation-form__submit']}>
-        {initial ? 'Сохранить изменения' : 'Создать операцию'}
+        {initial ? `${t('save_changes')}` : `${t('create_operation')}`}
       </button>
     </form>
   );

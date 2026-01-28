@@ -1,15 +1,18 @@
 import React, { useContext } from 'react';
-import { OperationShortModel } from '../../entities/OperationShortModel';
+import { Operation } from '../../entities/Operation';
 import styles from './opetationShort.module.scss';
 import { ThemeContext } from '../../contexts/ThemeContext';
+
 interface OperationShortProps {
-  operation: OperationShortModel;
-  onView: (op: OperationShortModel) => void;
-  onEdit: (op: OperationShortModel) => void;
+  operation: Operation;
+  onView: (op: Operation) => void;
+  onEdit: (op: Operation) => void;
+  onDelete: (id: string) => void;
 }
-export function OperationShort({ operation, onView, onEdit }: OperationShortProps) {
+
+export function OperationShort({ operation, onView, onEdit, onDelete }: OperationShortProps) {
   const { theme } = useContext(ThemeContext);
-  const { title, category, description, amount } = operation;
+  const { title, categoryId, description, amount, category } = operation;
 
   return (
     <div className={`${styles['operation-short']} ${styles[theme]}`}>
@@ -17,14 +20,19 @@ export function OperationShort({ operation, onView, onEdit }: OperationShortProp
         <button className={styles['operation-short__button']} onClick={() => onView(operation)}>
           👁
         </button>
-        <button className={styles['operation-short__button']} onClick={() => onEdit(operation)}>
-          ✏️
-        </button>
+        <div>
+          <button className={styles['operation-short__button']} onClick={() => onEdit(operation)}>
+            ✏️
+          </button>
+          <button className={styles['operation-short__button']} onClick={() => onDelete(operation.id)}>
+            🗑️
+          </button>
+        </div>
       </div>
       <div className={styles['operation-short__information']}>
         <div className={styles['operation-short__left']}>
           <h3 className={styles['operation-short__title']}>{title}</h3>
-          <p className={styles['operation-short__category']}>{category}</p>
+          <p className={styles['operation-short__category']}>{category.name}</p>
         </div>
         <div className={styles['operation-short__right']}>
           <h3 className={`${styles['operation-short__amount']} ${amount > 0 ? styles.positive : styles.negative}`}>
