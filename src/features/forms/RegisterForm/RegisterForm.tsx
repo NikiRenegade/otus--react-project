@@ -7,7 +7,6 @@ import { useTranslation } from 'react-i18next';
 interface RegisterValues {
   email: string;
   password: string;
-  repeat: string;
 }
 
 interface RegisterFormProps {
