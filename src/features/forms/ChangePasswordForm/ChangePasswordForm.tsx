@@ -5,7 +5,7 @@ import { ThemeContext } from '../../../contexts/ThemeContext';
 import { useTranslation } from 'react-i18next';
 
 interface ChangePasswordValues {
-  currentPassword: string;
+  password: string;
   newPassword: string;
 }
 
@@ -35,11 +35,11 @@ export const ChangePasswordForm: React.FC<ChangePasswordFormProps> = ({ onSubmit
         </label>
         <input
           type="password"
-          {...register('currentPassword', {
+          {...register('password', {
             required: `${t('enter')} ${t('old_low')} ${t('password_low')}`,
           })}
         />
-        {errors.currentPassword && <span className={styles['error-message']}>{errors.currentPassword.message}</span>}
+        {errors.password && <span className={styles['error-message']}>{errors.password.message}</span>}
       </div>
 
       <div className={styles['change-password-form__item']}>

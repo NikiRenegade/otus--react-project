@@ -8,7 +8,7 @@ import { OperationPage } from 'src/pages/OperationPage/OperationPage';
 import { NotFoundPage } from 'src/pages/NotFoundPage/NotFoundPage';
 import { HomePage } from 'src/pages/HomePage/HomePage';
 import { Header } from 'src/components/headerComponent/Header';
-import { ModalManager } from 'src/components/modalNavigate/ModalManager';
+import { ModalManager } from 'src/components/modalManager/ModalManager';
 import { AppDispatch, State } from '../store/index';
 import { useDispatch, useSelector } from 'react-redux';
 import { Routes, Route, useLocation } from 'react-router-dom';

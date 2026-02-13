@@ -1,23 +1,24 @@
 import React, { useContext } from 'react';
 import { useForm } from 'react-hook-form';
 import { Operation } from '../../../entities/Operation';
-import { Category, categories } from '../../../entities/Category';
+import { Category } from '../../../entities/Category';
 import styles from './OperationChangeForm.module.scss';
 import { ThemeContext } from '../../../contexts/ThemeContext';
 import { useTranslation } from 'react-i18next';
+import { useGetCategoriesQuery } from 'src/store/api';
 
 export interface OperationChangeFormValues {
-  title: string;
-  description?: string;
+  name: string;
+  desc?: string;
   amount: number;
+  createdAt: Date;
   categoryId: string;
-  category: Category;
 }
 
-export const OperationChangeForm: React.FC<{ initial?: Operation; onSave: (op: Operation) => void }> = ({
-  initial,
-  onSave,
-}) => {
+export const OperationChangeForm: React.FC<{
+  initial?: Operation;
+  onSave: (op: OperationChangeFormValues) => void;
+}> = ({ initial, onSave }) => {
   const { theme } = useContext(ThemeContext);
   const {
     register,
@@ -26,44 +27,25 @@ export const OperationChangeForm: React.FC<{ initial?: Operation; onSave: (op: O
   } = useForm<OperationChangeFormValues>({
     defaultValues: initial
       ? {
-          title: initial.title,
-          description: initial.description || '',
+          name: initial.name,
+          desc: initial.desc || '',
           amount: initial.amount,
-          categoryId: initial.categoryId,
+          categoryId: initial.category.id,
         }
       : {
-          title: '',
-          description: '',
+          name: '',
+          desc: '',
           amount: 0,
           categoryId: '',
         },
   });
   const { t } = useTranslation();
   const submit = (data: OperationChangeFormValues) => {
-    const category = categories.find((c) => c.id === data.categoryId);
-    if (!category) return;
-
-    const operation: Operation = initial
-      ? {
-          ...initial,
-          title: data.title,
-          description: data.description,
-          amount: data.amount,
-          categoryId: data.categoryId,
-          category,
-        }
-      : {
-          id: crypto.randomUUID(),
-          createdAt: new Date().toISOString(),
-          title: data.title,
-          description: data.description,
-          amount: data.amount,
-          categoryId: data.categoryId,
-          category,
-        };
-
-    onSave(operation);
+    onSave(data);
   };
+  const { data, isLoading } = useGetCategoriesQuery();
+  const categories: Category[] = data?.data ?? [];
+  console.log(categories);
 
   return (
     <form
@@ -73,19 +55,19 @@ export const OperationChangeForm: React.FC<{ initial?: Operation; onSave: (op: O
       <div className={styles['operation-form__item']}>
         <label>{t('operation_name_cap')}*</label>
         <input
-          {...register('title', { required: `${t('enter')} ${t('operation_name_low')}` })}
+          {...register('name', { required: `${t('enter')} ${t('operation_name_low')}` })}
           placeholder={`${t('enter')} ${t('operation_name_low')}`}
         />
-        {errors.title && <span className={styles['error-message']}>{errors.title.message}</span>}
+        {errors.name && <span className={styles['error-message']}>{errors.name.message}</span>}
       </div>
 
       <div className={styles['operation-form__item']}>
         <label>{t('operation_description_cap')}</label>
         <textarea
-          {...register('description', { maxLength: { value: 500, message: `${t('maximum_500_characters')}` } })}
+          {...register('desc', { maxLength: { value: 500, message: `${t('maximum_500_characters')}` } })}
           placeholder={`${t('enter')} ${t('operation_description_low')}`}
         />
-        {errors.description && <span className={styles['error-message']}>{errors.description.message}</span>}
+        {errors.desc && <span className={styles['error-message']}>{errors.desc.message}</span>}
       </div>
 
       <div className={styles['operation-form__grid']}>
@@ -105,21 +87,22 @@ export const OperationChangeForm: React.FC<{ initial?: Operation; onSave: (op: O
 
         <div className={styles['operation-form__item-small']}>
           <label>{t('operation_category_cap')}*</label>
-          <select
-            {...register('categoryId', {
-              required: `${t('select')} ${t('operation_category_low')}`,
-            })}
-          >
-            <option value="">
-              -- {t('select')} {t('operation_category_low')} --
-            </option>
-            {categories.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.name}
+          {!isLoading ? (
+            <select
+              {...register('categoryId', {
+                required: `${t('select')} ${t('operation_category_low')}`,
+              })}
+            >
+              <option value="">
+                -- {t('select')} {t('operation_category_low')} --
               </option>
-            ))}
-          </select>
-          {errors.categoryId && <span className={styles['error-message']}>{errors.categoryId.message}</span>}
+              {categories.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.name}
+                </option>
+              ))}
+            </select>
+          ) : null}
         </div>
       </div>
 
