@@ -5,10 +5,10 @@ import { ThemeContext } from '../../../contexts/ThemeContext';
 import { useTranslation } from 'react-i18next';
 
 interface ProfileValues {
-  name: string;
+  name?: string;
   email: string;
-  phone: string;
-  description: string;
+  phone?: string;
+  description?: string;
 }
 interface ProfileFormProps {
   onSubmit: (data: ProfileValues) => void;

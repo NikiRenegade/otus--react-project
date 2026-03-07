@@ -12,7 +12,7 @@ interface OperationShortProps {
 
 export function OperationShort({ operation, onView, onEdit, onDelete }: OperationShortProps) {
   const { theme } = useContext(ThemeContext);
-  const { title, categoryId, description, amount, category } = operation;
+  const { name, desc, amount, category } = operation;
 
   return (
     <div className={`${styles['operation-short']} ${styles[theme]}`}>
@@ -31,14 +31,14 @@ export function OperationShort({ operation, onView, onEdit, onDelete }: Operatio
       </div>
       <div className={styles['operation-short__information']}>
         <div className={styles['operation-short__left']}>
-          <h3 className={styles['operation-short__title']}>{title}</h3>
+          <h3 className={styles['operation-short__name']}>{name}</h3>
           <p className={styles['operation-short__category']}>{category.name}</p>
         </div>
         <div className={styles['operation-short__right']}>
           <h3 className={`${styles['operation-short__amount']} ${amount > 0 ? styles.positive : styles.negative}`}>
             {amount}
           </h3>
-          <p className={styles['operation-short__description']}>{description}</p>
+          <p className={styles['operation-short__description']}>{desc}</p>
         </div>
       </div>
     </div>

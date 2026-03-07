@@ -2,23 +2,16 @@ import React, { useContext } from 'react';
 import styles from './operationFull.module.scss';
 import { ThemeContext } from '../../contexts/ThemeContext';
 interface OperationFullProps {
-  title: string;
+  name: string;
   categoryName: string;
-  description: string;
+  desc: string;
   amount: number;
-  dateTime: string;
+  createdAt: Date;
   categoryColor: string;
 }
-export function OperationFull({
-  title,
-  categoryName,
-  description,
-  amount,
-  dateTime,
-  categoryColor,
-}: OperationFullProps) {
+export function OperationFull({ name, categoryName, desc, amount, createdAt, categoryColor }: OperationFullProps) {
   const { theme } = useContext(ThemeContext);
-  const parsedDate = new Date(dateTime);
+  const parsedDate = new Date(createdAt);
 
   const datePart = parsedDate.toLocaleDateString('ru-RU', {
     day: 'numeric',
@@ -30,7 +23,6 @@ export function OperationFull({
     minute: 'numeric',
   });
   const formattedDateTime = `${datePart} в ${timePart}`;
-
   return (
     <div className={`${styles['operation-full']} ${styles[theme]}`} data-test={theme}>
       <div className={styles['operation-full__header']} style={{ backgroundColor: categoryColor }}>
@@ -38,14 +30,14 @@ export function OperationFull({
         <button className={styles['operation-full__edit-button']}>✏️</button>
       </div>
       <div className={styles['operation-full__main']}>
-        <div className={styles['operation-full__title']}>{title}</div>
+        <div className={styles['operation-full__name']}>{name}</div>
         <div className={styles['operation-full__category']}>{categoryName}</div>
         <h3 className={`${styles['operation-full__amount']} ${amount > 0 ? styles.positive : styles.negative}`}>
           {amount}
         </h3>
       </div>
       <div className={styles['operation-full__footer']}>
-        <p className={styles['operation-full__description']}>{description}</p>
+        <p className={styles['operation-full__description']}>{desc}</p>
       </div>
     </div>
   );

@@ -4,9 +4,9 @@ import { LoginForm } from '../../features/forms/LoginForm/LoginForm';
 import { RegisterForm } from '../../features/forms/RegisterForm/RegisterForm';
 import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../../store/slices/authSlice';
-import { signupRequest } from '../../store/slices/registerSlice';
 import { AppDispatch, State } from '../../store/index';
-import { useSignupMutation } from '../../store/api';
+import { useSignupMutation, useSigninMutation } from '../../store/api';
+import { useTranslation } from 'react-i18next';
 type AuthMode = 'login' | 'register';
 
 interface AuthModalProps {
@@ -20,39 +20,50 @@ export const AuthModal: React.FC<AuthModalProps> = ({ mode, onClose, onSwitch })
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
   const { error } = useSelector((state: State) => state.register);
   const [signup] = useSignupMutation();
-  const handleLogin = (data: { email: string; password: string }) => {
-    dispatch(login(data));
-    onClose();
-  };
-  const handleRegisterSaga = (data: { email: string; password: string }) => {
-    dispatch(
-      signupRequest({
-        ...data,
-        commandId: 'default-command',
-      })
-    );
-  };
-  const handleRegisterRTKQ = async (data: { email: string; password: string }) => {
+  const [signin] = useSigninMutation();
+  const { t } = useTranslation();
+  const handleRegister = async (data: { email: string; password: string }) => {
     try {
       const result = await signup({ ...data, commandId: 'default-command' }).unwrap();
-      localStorage.setItem('token', result.token);
-
-      console.log('Профиль:', result.profile);
-      alert('Регистрация успешна!');
+      dispatch(login({ token: result.token }));
+      alert(`${t('registration_successful')}`);
       onClose();
     } catch (err: any) {
       switch (err?.data?.errors[0].name) {
-        case 'ValidationError':
-          setErrorMessage('Ошибка валидации');
-          break;
         case 'AccountAlreadyExistError':
-          setErrorMessage('Пользователь с таким email уже существует');
+          setErrorMessage(`${t('account_already_exist_error')}`);
+          break;
+        case 'ValidationError':
+          setErrorMessage(`${t('validation_error')}`);
           break;
         case 'InternalServerError':
-          setErrorMessage('Внутренняя ошибка сервера');
+          setErrorMessage(`${t('internal_server_error')}`);
           break;
         default:
-          setErrorMessage(err.errors[0].message);
+          setErrorMessage(err?.data?.errors[0].message);
+      }
+      console.log(errorMessage);
+    }
+  };
+  const handleLogin = async (data: { email: string; password: string }) => {
+    try {
+      const result = await signin(data).unwrap();
+      dispatch(login({ token: result.token }));
+      alert(`${t('login_successful')}`);
+      onClose();
+    } catch (err: any) {
+      switch (err?.data?.errors[0]?.name) {
+        case 'IncorrectEmailOrPasswordError':
+          setErrorMessage(`${t('incorrect_email_or_password_error')}`);
+          break;
+        case 'ValidationError':
+          setErrorMessage(`${t('validation_error')}`);
+          break;
+        case 'InternalServerError':
+          setErrorMessage(`${t('internal_server_error')}`);
+          break;
+        default:
+          setErrorMessage(err?.data?.errors[0]?.message);
       }
       console.log(errorMessage);
     }
@@ -60,10 +71,13 @@ export const AuthModal: React.FC<AuthModalProps> = ({ mode, onClose, onSwitch })
   return (
     <Modal visible onClose={onClose} size="sm">
       {mode === 'login' ? (
-        <LoginForm onSwitch={() => onSwitch('register')} onSubmit={handleLogin} />
+        <>
+          <LoginForm onSwitch={() => onSwitch('register')} onSubmit={handleLogin} />
+          {(errorMessage || error) && <p style={{ color: 'red' }}>{errorMessage || error}</p>}
+        </>
       ) : (
         <>
-          <RegisterForm onSubmit={handleRegisterRTKQ} onSwitch={() => onSwitch('login')} />
+          <RegisterForm onSubmit={handleRegister} onSwitch={() => onSwitch('login')} />
           {(errorMessage || error) && <p style={{ color: 'red' }}>{errorMessage || error}</p>}
         </>
       )}
