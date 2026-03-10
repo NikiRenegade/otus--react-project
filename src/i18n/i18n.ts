@@ -2,7 +2,7 @@ import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
 const resources = {
-  eng: {
+  en: {
     translation: {
       home_title: 'Welcome to Finance Tracker',
       home_subtitle: 'Keep track of your expenses, income, and operations easily.',
@@ -70,7 +70,7 @@ const resources = {
       category_name_low: 'category name',
     },
   },
-  rus: {
+  ru: {
     translation: {
       home_title: 'Добро пожаловать в Финансовый Трекер',
       home_subtitle: 'Следите за своими расходами, доходами и операциями легко.',
@@ -86,7 +86,7 @@ const resources = {
       register_switch_login: 'Переключиться на вход',
       your_name: 'Ваше имя',
       maximum_200_characters: 'максимум 200 символов',
-      maximum_500_characters: 'максимум 200 символов',
+      maximum_500_characters: 'максимум 500 символов',
       tell_us_about_yourself: 'Расскажите о себе',
       edit: 'Редактировать',
       save: 'Сохранить',
@@ -142,8 +142,8 @@ const resources = {
 
 i18n.use(initReactI18next).init({
   resources,
-  lng: 'rus',
-  fallbackLng: 'eng',
+  lng: 'ru',
+  fallbackLng: 'en',
   interpolation: { escapeValue: false },
 });
 

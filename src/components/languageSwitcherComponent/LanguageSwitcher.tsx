@@ -6,7 +6,7 @@ export function LanguageSwitcher() {
   const { language, toggleLanguage } = useContext(LanguageContext);
   return (
     <button className={styles['language-switcher']} onClick={toggleLanguage}>
-      {language === 'rus' ? 'RUS' : 'ENG'}
+      {language === 'ru' ? 'RU' : 'EN'}
     </button>
   );
 }

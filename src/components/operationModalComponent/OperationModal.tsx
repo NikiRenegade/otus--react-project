@@ -1,11 +1,13 @@
-import React from 'react';
 import { skipToken } from '@reduxjs/toolkit/query';
-import { OperationFull } from '../operationFullComponent/OperationFull';
-import { OperationChangeForm, OperationChangeFormValues } from '../../features/forms/OperationForm/OperationChangeForm';
-import { Operation } from '../../entities/Operation';
-import { Modal } from '../modalComponent/Modal';
-import { useCreateOperationMutation, useUpdateOperationMutation, useGetOperationQuery } from '../../store/api';
+import { notification } from 'antd';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { Operation } from '../../entities/Operation';
+import { OperationChangeForm, OperationChangeFormValues } from '../../features/forms/OperationForm/OperationChangeForm';
+import { useCreateOperationMutation, useGetOperationQuery, useUpdateOperationMutation } from '../../store/api';
+import { normalizeApiError } from '../../utils/normalizeApiError';
+import { Modal } from '../modalComponent/Modal';
+import { OperationFull } from '../operationFullComponent/OperationFull';
 export type OperationMode = 'view' | 'edit';
 
 interface OperationModalProps {
@@ -29,25 +31,27 @@ export const OperationModal: React.FC<OperationModalProps> = ({ operationId, mod
         date: new Date().toISOString(),
       }).unwrap();
       onClose();
-    } catch (err) {
-      switch (err?.data?.errors[0]?.name) {
+    } catch (err: unknown) {
+      console.error(err);
+      const { name, message } = normalizeApiError(err);
+      switch (name) {
         case 'NotValidIdError':
-          alert(`${t('operation_category_is_not_valid')}`);
+          notification.error({ title: t('operation_category_is_not_valid'), description: message });
           break;
         case 'FieldRequiredError':
-          alert(`${t('operation_category_is_required')}`);
+          notification.error({ title: t('operation_category_is_required'), description: message });
           break;
         case 'NotFoundError':
-          alert(`${t('operation_category_not_found_error')}`);
+          notification.error({ title: t('operation_category_not_found_error'), description: message });
           break;
         case 'ValidationError':
-          alert(`${t('validation_error')}`);
+          notification.error({ title: t('validation_error'), description: message });
           break;
         case 'InternalServerError':
-          alert(`${t('internal_server_error')}`);
+          notification.error({ title: t('internal_server_error'), description: message });
           break;
         default:
-          alert(err?.data?.errors[0]?.message);
+          notification.error({ title: message });
       }
     }
   };
@@ -62,22 +66,24 @@ export const OperationModal: React.FC<OperationModalProps> = ({ operationId, mod
         },
       }).unwrap();
       onClose();
-    } catch (err) {
-      switch (err?.data?.errors[0]?.name) {
+    } catch (err: unknown) {
+      console.error(err);
+      const { name, message } = normalizeApiError(err);
+      switch (name) {
         case 'NotFoundError':
-          alert(`${t('operation_not_found_error')}`);
+          notification.error({ title: t('operation_not_found_error'), description: message });
           break;
         case 'NotAllowedError':
-          alert(`${t('you_cant_edit_this_operation')}`);
+          notification.error({ title: t('you_cant_edit_this_operation'), description: message });
           break;
         case 'ValidationError':
-          alert(`${t('validation_error')}`);
+          notification.error({ title: t('validation_error'), description: message });
           break;
         case 'InternalServerError':
-          alert(`${t('internal_server_error')}`);
+          notification.error({ title: t('internal_server_error'), description: message });
           break;
         default:
-          alert(err?.data?.errors[0]?.message);
+          notification.error({ title: message });
       }
     }
   };
@@ -93,12 +99,7 @@ export const OperationModal: React.FC<OperationModalProps> = ({ operationId, mod
           categoryColor="#4f46e5"
         />
       )}
-      {mode === 'edit' && operation && (
-        <OperationChangeForm
-          initial={operation}
-          onSave={handleOperationUpdate}
-        />
-      )}
+      {mode === 'edit' && operation && <OperationChangeForm initial={operation} onSave={handleOperationUpdate} />}
 
       {mode === 'edit' && !operationId && <OperationChangeForm onSave={handleOperationCreate} />}
     </Modal>

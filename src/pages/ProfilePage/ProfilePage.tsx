@@ -7,6 +7,8 @@ import { useGetProfileQuery } from '../../store/api';
 import { AddCategoryForm } from 'src/features/forms/ChangeCategoryForm/AddCategoryForm';
 import { useCreateCategoryMutation, useChangePasswordMutation } from '../../store/api';
 import { useTranslation } from 'react-i18next';
+import { notification } from 'antd';
+import { normalizeApiError } from '../../utils/normalizeApiError';
 
 export const ProfilePage: React.FC = () => {
   const { t } = useTranslation();
@@ -18,15 +20,17 @@ export const ProfilePage: React.FC = () => {
     try {
       await createCategory(data.name).unwrap();
     } catch (err) {
-      switch (err?.data?.errors[0]?.name) {
+      console.error(err);
+      const { name, message } = normalizeApiError(err);
+      switch (name) {
         case 'ValidationError':
-          alert(`${t('validation_error')}`);
+          notification.error({ title: t('validation_error'), description: message });
           break;
         case 'InternalServerError':
-          alert(`${t('internal_server_error')}`);
+          notification.error({ title: t('internal_server_error'), description: message });
           break;
         default:
-          alert(err?.data?.errors[0]?.message);
+          notification.error({ title: message });
       }
     }
   };
@@ -34,23 +38,25 @@ export const ProfilePage: React.FC = () => {
     try {
       await changePassword(data).unwrap();
     } catch (err) {
-      switch (err?.data?.errors[0]?.name) {
+      console.error(err);
+      const { name, message } = normalizeApiError(err);
+      switch (name) {
         case 'IncorrectPasswordError':
-          alert(`${t('incorrect_old_password')}`);
+          notification.error({ title: t('incorrect_old_password'), description: message });
           break;
         case 'InvalidPasswordError':
-          alert(`${t('incorrect_new_password')}`);
+          notification.error({ title: t('incorrect_new_password'), description: message });
           break;
         case 'InternalServerError':
-          alert(`${t('internal_server_error')}`);
+          notification.error({ title: t('internal_server_error'), description: message });
           break;
         default:
-          alert(err?.data?.errors[0]?.message);
+          notification.error({ title: message });
       }
     }
   };
   const handleProfileSubmit = (data: any) => {
-    console.log(data);
+    // TODO: type this handler properly (see TYPE_SUGGESTIONS.md)
   };
 
   return (

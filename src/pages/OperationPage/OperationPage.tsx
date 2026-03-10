@@ -1,11 +1,14 @@
+import { notification } from 'antd';
 import React, { useContext } from 'react';
-import { OperationList } from '../../components/operationListComponent/OperationList';
-import { Operation } from '../../entities/Operation';
-import { useNavigate, useLocation } from 'react-router-dom';
-import styles from './OperationPage.module.scss';
-import { ThemeContext } from '../../contexts/ThemeContext';
-import { useGetOperationsQuery, useDeleteOperationMutation } from '../../store/api';
 import { useTranslation } from 'react-i18next';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { OperationList } from '../../components/operationListComponent/OperationList';
+import { ThemeContext } from '../../contexts/ThemeContext';
+import { Operation } from '../../entities/Operation';
+import { useDeleteOperationMutation, useGetOperationsQuery } from '../../store/api';
+import { normalizeApiError } from '../../utils/normalizeApiError';
+import styles from './OperationPage.module.scss';
+
 export const OperationPage = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -25,18 +28,20 @@ export const OperationPage = () => {
     try {
       await deleteOperation(operationId).unwrap();
     } catch (err) {
-      switch (err?.data?.errors[0]?.name) {
+      console.error(err);
+      const { name, message } = normalizeApiError(err);
+      switch (name) {
         case 'NotFoundError':
-          alert(`${t('operation_not_found_error')}`);
+          notification.error({ title: t('operation_not_found_error'), description: message });
           break;
         case 'NotAllowedError':
-          alert(`${t('you_cant_remove_this_operation')}`);
+          notification.error({ title: t('you_cant_remove_this_operation'), description: message });
           break;
         case 'InternalServerError':
-          alert(`${t('internal_server_error')}`);
+          notification.error({ title: t('internal_server_error'), description: message });
           break;
         default:
-          alert(err?.data?.errors[0]?.message);
+          notification.error({ title: message });
       }
     }
   };
