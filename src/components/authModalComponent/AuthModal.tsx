@@ -1,12 +1,14 @@
+import { notification } from 'antd';
 import React from 'react';
-import { Modal } from '../modalComponent/Modal';
+import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
 import { LoginForm } from '../../features/forms/LoginForm/LoginForm';
 import { RegisterForm } from '../../features/forms/RegisterForm/RegisterForm';
-import { useDispatch, useSelector } from 'react-redux';
-import { login } from '../../store/slices/authSlice';
+import { useSigninMutation, useSignupMutation } from '../../store/api';
 import { AppDispatch, State } from '../../store/index';
-import { useSignupMutation, useSigninMutation } from '../../store/api';
-import { useTranslation } from 'react-i18next';
+import { login } from '../../store/slices/authSlice';
+import { normalizeApiError } from '../../utils/normalizeApiError';
+import { Modal } from '../modalComponent/Modal';
 type AuthMode = 'login' | 'register';
 
 interface AuthModalProps {
@@ -18,7 +20,6 @@ interface AuthModalProps {
 export const AuthModal: React.FC<AuthModalProps> = ({ mode, onClose, onSwitch }) => {
   const dispatch = useDispatch<AppDispatch>();
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
-  const { error } = useSelector((state: State) => state.register);
   const [signup] = useSignupMutation();
   const [signin] = useSigninMutation();
   const { t } = useTranslation();
@@ -26,46 +27,56 @@ export const AuthModal: React.FC<AuthModalProps> = ({ mode, onClose, onSwitch })
     try {
       const result = await signup({ ...data, commandId: 'default-command' }).unwrap();
       dispatch(login({ token: result.token }));
-      alert(`${t('registration_successful')}`);
+      notification.success({ title: t('registration_successful') });
       onClose();
-    } catch (err: any) {
-      switch (err?.data?.errors[0].name) {
+    } catch (err: unknown) {
+      console.error(err);
+      const { name, message } = normalizeApiError(err);
+      switch (name) {
         case 'AccountAlreadyExistError':
-          setErrorMessage(`${t('account_already_exist_error')}`);
+          setErrorMessage(t('account_already_exist_error'));
+          notification.error({ title: t('account_already_exist_error'), description: message });
           break;
         case 'ValidationError':
-          setErrorMessage(`${t('validation_error')}`);
+          setErrorMessage(t('validation_error'));
+          notification.error({ title: t('validation_error'), description: message });
           break;
         case 'InternalServerError':
-          setErrorMessage(`${t('internal_server_error')}`);
+          setErrorMessage(t('internal_server_error'));
+          notification.error({ title: t('internal_server_error'), description: message });
           break;
         default:
-          setErrorMessage(err?.data?.errors[0].message);
+          setErrorMessage(message);
+          notification.error({ title: message });
       }
-      console.log(errorMessage);
     }
   };
   const handleLogin = async (data: { email: string; password: string }) => {
     try {
       const result = await signin(data).unwrap();
       dispatch(login({ token: result.token }));
-      alert(`${t('login_successful')}`);
+      notification.success({ title: t('login_successful') });
       onClose();
-    } catch (err: any) {
-      switch (err?.data?.errors[0]?.name) {
+    } catch (err: unknown) {
+      console.error(err);
+      const { name, message } = normalizeApiError(err);
+      switch (name) {
         case 'IncorrectEmailOrPasswordError':
-          setErrorMessage(`${t('incorrect_email_or_password_error')}`);
+          setErrorMessage(t('incorrect_email_or_password_error'));
+          notification.error({ title: t('incorrect_email_or_password_error'), description: message });
           break;
         case 'ValidationError':
-          setErrorMessage(`${t('validation_error')}`);
+          setErrorMessage(t('validation_error'));
+          notification.error({ title: t('validation_error'), description: message });
           break;
         case 'InternalServerError':
-          setErrorMessage(`${t('internal_server_error')}`);
+          setErrorMessage(t('internal_server_error'));
+          notification.error({ title: t('internal_server_error'), description: message });
           break;
         default:
-          setErrorMessage(err?.data?.errors[0]?.message);
+          setErrorMessage(message);
+          notification.error({ title: message });
       }
-      console.log(errorMessage);
     }
   };
   return (
@@ -73,12 +84,12 @@ export const AuthModal: React.FC<AuthModalProps> = ({ mode, onClose, onSwitch })
       {mode === 'login' ? (
         <>
           <LoginForm onSwitch={() => onSwitch('register')} onSubmit={handleLogin} />
-          {(errorMessage || error) && <p style={{ color: 'red' }}>{errorMessage || error}</p>}
+          {(errorMessage) && <p style={{ color: 'red' }}>{errorMessage}</p>}
         </>
       ) : (
         <>
           <RegisterForm onSubmit={handleRegister} onSwitch={() => onSwitch('login')} />
-          {(errorMessage || error) && <p style={{ color: 'red' }}>{errorMessage || error}</p>}
+          {(errorMessage) && <p style={{ color: 'red' }}>{errorMessage}</p>}
         </>
       )}
     </Modal>

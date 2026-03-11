@@ -31,7 +31,6 @@ interface ChangeOperationRequest {
 
 export interface GetCategoriesResponse {
   data: Category[];
-  total: number;
 }
 
 export const api = createApi({
@@ -46,7 +45,7 @@ export const api = createApi({
       return headers;
     },
   }),
-  tagTypes: ['Operations', 'Categories'],
+  tagTypes: ['Operations', 'Categories', 'Profile'],
   endpoints: (builder) => ({
     signup: builder.mutation<AuthResult, SignUpBody>({
       query: (body) => ({
@@ -67,17 +66,19 @@ export const api = createApi({
         url: 'profile',
         method: 'GET',
       }),
+      providesTags: ['Profile'],
+    }),
+    updateProfile: builder.mutation<User, { name: string; email: string }>({
+      query: (body) => ({
+        url: 'profile',
+        method: 'PUT',
+        body,
+      }),
+      invalidatesTags: ['Profile'],
     }),
     changePassword: builder.mutation<any, { password: string; newPassword: string }>({
       query: (body) => ({
         url: 'profile/change-password',
-        method: 'POST',
-        body,
-      }),
-    }),
-    createCategory: builder.mutation<void, string>({
-      query: (body) => ({
-        url: 'categories',
         method: 'POST',
         body,
       }),
@@ -87,6 +88,31 @@ export const api = createApi({
         url: 'categories',
         method: 'GET',
       }),
+      providesTags: ['Categories'],
+    }),
+    createCategory: builder.mutation<void, { name: string }>({
+      query: (body) => ({
+        url: 'categories',
+        method: 'POST',
+        body,
+      }),
+      invalidatesTags: ['Categories'],
+    }),
+    updateCategory: builder.mutation<Category, { id: string; name: string }>({
+      query: ({ id, name }) => ({
+        url: `categories/${id}`,
+        method: 'PUT',
+        body: { name },
+      }),
+      invalidatesTags: ['Categories'],
+    }),
+
+    deleteCategory: builder.mutation<void, string>({
+      query: (id) => ({
+        url: `categories/${id}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['Categories'],
     }),
     getOperations: builder.query<GetOperationsResponse, void>({
       query: () => ({
@@ -129,11 +155,14 @@ export const api = createApi({
 
 export const {
   useGetProfileQuery,
+  useUpdateProfileMutation,
   useSignupMutation,
   useSigninMutation,
   useChangePasswordMutation,
   useGetCategoriesQuery,
   useCreateCategoryMutation,
+  useUpdateCategoryMutation,
+  useDeleteCategoryMutation,
   useGetOperationsQuery,
   useGetOperationQuery,
   useCreateOperationMutation,

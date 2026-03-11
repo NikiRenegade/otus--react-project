@@ -1,0 +1,62 @@
+@import '../../styles/variables';
+
+.category-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.category-list__item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 500px;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  padding: 16px;
+  margin: 10px;
+}
+
+.category-list__name {
+  font-weight: 700;
+  font-size: 20px;
+  margin: 0;
+  overflow: hidden;
+  max-width: 300px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.category-list__actions {
+  display: flex;
+  gap: 10px;
+}
+
+.category-list__button {
+  background: transparent;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 6px 10px;
+  transition: background 0.15s;
+}
+
+.category-list__button:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.category-list.light {
+  background-color: $color-bg-light;
+  color: $color-text-light;
+}
+
+.category-list.dark {
+  background-color: $color-bg-dark;
+  color: $color-text-dark;
+}
+
+.category-list.dark .category-list__button:hover {
+  background: rgba(255, 255, 255, 0.08);
+}

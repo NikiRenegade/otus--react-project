@@ -13,7 +13,6 @@ export const AuthPage: React.FC = () => {
     }
   };
   const handleRegister = (data: { email: string; password: string }) => {
-    console.log(data);
   };
   return (
     <div style={{ maxWidth: 420, margin: '40px auto' }}>

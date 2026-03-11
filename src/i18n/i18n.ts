@@ -2,7 +2,7 @@ import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
 const resources = {
-  eng: {
+  en: {
     translation: {
       home_title: 'Welcome to Finance Tracker',
       home_subtitle: 'Keep track of your expenses, income, and operations easily.',
@@ -42,6 +42,14 @@ const resources = {
       operation_category_is_not_valid: 'Category is not valid',
       operation_category_is_required: 'Category is required',
       operation_category_not_found_error: 'Category not found',
+      password_updated: 'Password updated',
+      profile_updated: 'Profile updated',
+      category_added: 'Category added',
+      category_updated: 'Category updated',
+      category_deleted: 'Category deleted',
+      edit_category: 'Edit category',
+      sort_by: 'Sort by',
+      operation_creation_date: 'Operation creation date',
       category_name_cap: 'Category name',
       password_cap: 'Password',
       email_cap: 'Email',
@@ -70,7 +78,7 @@ const resources = {
       category_name_low: 'category name',
     },
   },
-  rus: {
+  ru: {
     translation: {
       home_title: 'Добро пожаловать в Финансовый Трекер',
       home_subtitle: 'Следите за своими расходами, доходами и операциями легко.',
@@ -86,7 +94,7 @@ const resources = {
       register_switch_login: 'Переключиться на вход',
       your_name: 'Ваше имя',
       maximum_200_characters: 'максимум 200 символов',
-      maximum_500_characters: 'максимум 200 символов',
+      maximum_500_characters: 'максимум 500 символов',
       tell_us_about_yourself: 'Расскажите о себе',
       edit: 'Редактировать',
       save: 'Сохранить',
@@ -110,6 +118,14 @@ const resources = {
       operation_category_is_not_valid: 'Категория не корректна',
       operation_category_is_required: 'Необходимо указать категорию',
       operation_category_not_found_error: 'Данная категория не найдена',
+      password_updated: 'Пароль обновлен',
+      profile_updated: 'Профиль обновлен',
+      category_added: 'Категория добавлена',
+      category_updated: 'Категория обновлена',
+      category_deleted: 'Категория удалена',
+      edit_category: 'Редактироание категории',
+      sort_by: 'Сортировать',
+      operation_creation_date: 'Дата создания операции',
       category_name_cap: 'Наименование категории',
       password_cap: 'Пароль',
       email_cap: 'Email',
@@ -142,8 +158,8 @@ const resources = {
 
 i18n.use(initReactI18next).init({
   resources,
-  lng: 'rus',
-  fallbackLng: 'eng',
+  lng: 'ru',
+  fallbackLng: 'en',
   interpolation: { escapeValue: false },
 });
 

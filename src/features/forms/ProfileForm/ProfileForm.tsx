@@ -7,8 +7,6 @@ import { useTranslation } from 'react-i18next';
 interface ProfileValues {
   name?: string;
   email: string;
-  phone?: string;
-  description?: string;
 }
 interface ProfileFormProps {
   onSubmit: (data: ProfileValues) => void;
@@ -23,7 +21,7 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({ onSubmit, profileValue
     formState: { errors },
     reset,
   } = useForm<ProfileValues>({
-    defaultValues: { name: '', email: '', phone: '', description: '' },
+    defaultValues: { name: '', email: '' },
   });
 
   useEffect(() => {
@@ -31,8 +29,6 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({ onSubmit, profileValue
       reset({
         name: profileValues.name ?? '',
         email: profileValues.email ?? '',
-        phone: profileValues.phone ?? '',
-        description: profileValues.description ?? '',
       });
     }
   }, [profileValues, reset]);
@@ -61,32 +57,6 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({ onSubmit, profileValue
           placeholder="example@gmail.com"
         />
         {errors.email && <span className={styles['error-message']}>{errors.email.message}</span>}
-      </div>
-
-      <div className={styles['profile-form__item']}>
-        <label>{t('phone_number_cap')}</label>
-        <input
-          {...register('phone', {
-            required: `${t('enter')} ${t('phone_number_low')}`,
-            pattern: {
-              value: /^\+?[0-9\s\-()]{7,20}$/,
-              message: `${t('enter')} ${t('valid_low')} ${t('phone_number_low')}`,
-            },
-          })}
-          placeholder="example@gmail.com"
-        />
-        {errors.email && <span className={styles['error-message']}>{errors.email.message}</span>}
-      </div>
-
-      <div className={styles['profile-form__item']}>
-        <label>{t('about_myself_cap')}</label>
-        <textarea
-          {...register('description', {
-            maxLength: { value: 200, message: `${t('maximum_200_characters')}` },
-          })}
-          placeholder={t('tell_us_about_yourself')}
-        />
-        {errors.description && <span className={styles['error-message']}>{errors.description.message}</span>}
       </div>
 
       <button type="submit" className={styles['profile-form__submit']}>

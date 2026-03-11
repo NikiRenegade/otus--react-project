@@ -1,7 +1,7 @@
 import React from 'react';
 import { AuthModal } from '../authModalComponent/AuthModal';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
-import { OperationModal } from '../operationlModalComponent/OperationModal';
+import { OperationModal } from '../operationModalComponent/OperationModal';
 
 export const ModalManager: React.FC = () => {
   const location = useLocation();
