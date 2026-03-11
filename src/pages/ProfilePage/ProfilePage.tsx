@@ -1,26 +1,39 @@
 import React, { useContext } from 'react';
+import { Category } from '../../entities/Category';
+import { CategoryList} from '../../components/CategoryListComponent/CategoryList';
 import { ProfileForm } from '../../features/forms/ProfileForm/ProfileForm';
 import { ChangePasswordForm } from '../../features/forms/ChangePasswordForm/ChangePasswordForm';
 import styles from './ProfilePage.module.scss';
 import { ThemeContext } from '../../contexts/ThemeContext';
-import { useGetProfileQuery } from '../../store/api';
 import { AddCategoryForm } from 'src/features/forms/ChangeCategoryForm/AddCategoryForm';
-import { useCreateCategoryMutation, useChangePasswordMutation } from '../../store/api';
+import {
+  useGetCategoriesQuery,
+  useUpdateCategoryMutation,
+  useDeleteCategoryMutation,
+  useCreateCategoryMutation,
+  useGetProfileQuery,
+  useChangePasswordMutation,
+  useUpdateProfileMutation,
+} from '../../store/api';
 import { useTranslation } from 'react-i18next';
 import { notification } from 'antd';
 import { normalizeApiError } from '../../utils/normalizeApiError';
-
 export const ProfilePage: React.FC = () => {
   const { t } = useTranslation();
   const { theme } = useContext(ThemeContext);
   const profile = useGetProfileQuery().data;
+  const categories = useGetCategoriesQuery().data?.data;
+  console.log(categories);
   const [createCategory] = useCreateCategoryMutation();
   const [changePassword] = useChangePasswordMutation();
-  const handleCategorySubmit = async (data: { name: string }) => {
+  const [updateProfile] = useUpdateProfileMutation();
+  const [updateCategory] = useUpdateCategoryMutation();
+  const [deleteCategory] = useDeleteCategoryMutation();
+  const handleCreateCategory = async (data: { name: string }) => {
     try {
-      await createCategory(data.name).unwrap();
+      await createCategory(data).unwrap();
+      notification.success({ title: t('category_added') });
     } catch (err) {
-      console.error(err);
       const { name, message } = normalizeApiError(err);
       switch (name) {
         case 'ValidationError':
@@ -34,11 +47,35 @@ export const ProfilePage: React.FC = () => {
       }
     }
   };
+  const handleDeleteCategory = async (id: string) => {
+    try {
+      await deleteCategory(id).unwrap();
+      notification.success({ title: t('category_deleted') });
+    } catch (err) {
+      const { message } = normalizeApiError(err);
+      notification.error({ title: message });
+    }
+  };
+  const handleUpdateCategory = async (category: Category) => {
+    const newName = prompt(t('edit_category'), category.name);
+
+    try {
+      await updateCategory({
+        id: category.id,
+        name: newName,
+      }).unwrap();
+
+      notification.success({ title: t('category_updated') });
+    } catch (err) {
+      const { message } = normalizeApiError(err);
+      notification.error({ title: message });
+    }
+  };
   const handleChangePasswordSubmit = async (data: { password: string; newPassword: string }) => {
     try {
       await changePassword(data).unwrap();
+      notification.success({ title: t('password_updated') });
     } catch (err) {
-      console.error(err);
       const { name, message } = normalizeApiError(err);
       switch (name) {
         case 'IncorrectPasswordError':
@@ -55,8 +92,39 @@ export const ProfilePage: React.FC = () => {
       }
     }
   };
-  const handleProfileSubmit = (data: any) => {
-    // TODO: type this handler properly (see TYPE_SUGGESTIONS.md)
+  const handleProfileSubmit = async (data: { name?: string; email: string }) => {
+    try {
+      await updateProfile({
+        name: data.name || '',
+        email: data.email,
+      }).unwrap();
+
+      notification.success({ title: t('profile_updated') });
+    } catch (err) {
+      console.error(err);
+      const { name, message } = normalizeApiError(err);
+
+      switch (name) {
+        case 'ValidationError':
+          notification.error({
+            title: t('validation_error'),
+            description: message,
+          });
+          break;
+
+        case 'InternalServerError':
+          notification.error({
+            title: t('internal_server_error'),
+            description: message,
+          });
+          break;
+
+        default:
+          notification.error({
+            title: message,
+          });
+      }
+    }
   };
 
   return (
@@ -65,14 +133,15 @@ export const ProfilePage: React.FC = () => {
         profileValues={{
           name: profile?.name,
           email: profile?.email,
-          phone: profile?.phone,
-          description: profile?.description,
         }}
         onSubmit={handleProfileSubmit}
       />
 
       <ChangePasswordForm onSubmit={handleChangePasswordSubmit} />
-      <AddCategoryForm onSubmit={handleCategorySubmit} />
+      <AddCategoryForm onSubmit={handleCreateCategory} />
+      {categories && (
+        <CategoryList categories={categories} onEdit={handleUpdateCategory} onDelete={handleDeleteCategory} />
+      )}
     </div>
   );
 };
