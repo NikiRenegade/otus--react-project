@@ -78,3 +78,12 @@
     }
   }
 }
+.operation-list__sort.dark select {
+  background: $color-bg-dark;
+  color: $color-text-dark;
+}
+
+.operation-list__sort.light select {
+  background: $color-bg-light;
+  color: $color-text-light;
+}

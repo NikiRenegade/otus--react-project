@@ -41,7 +41,7 @@ export function OperationList({ operations, onView, onEdit, onDelete }: Operatio
   });
   return (
     <>
-      <div className={styles['operation-list__sort']}>
+      <div className={`${styles['operation-list__sort']} ${styles[theme]}`} data-test={theme}>
         <span>{t('sort_by')}:</span>
 
         <select value={sortField} onChange={(e) => setSortField(e.target.value as SortField)}>
