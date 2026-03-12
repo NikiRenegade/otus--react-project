@@ -1,5 +1,5 @@
 import { notification } from 'antd';
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { OperationList } from '../../components/operationListComponent/OperationList';
@@ -10,11 +10,15 @@ import { normalizeApiError } from '../../utils/normalizeApiError';
 import styles from './OperationPage.module.scss';
 
 export const OperationPage = () => {
+  type SortField = 'createdAt' | 'name';
   const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
   const { theme } = useContext(ThemeContext);
-  const { data } = useGetOperationsQuery();
+  const [sortField, setSortField] = useState<SortField>('createdAt');
+  const [asc, setAsc] = useState(false);
+  const { data } = useGetOperationsQuery({ sortingField: sortField, sortingType: asc ? 'ASC' : 'DESC' });
+  console.log(data);
   const [deleteOperation] = useDeleteOperationMutation();
   const operations: Operation[] = data?.data ?? [];
   const onView = (op: Operation) => {
@@ -47,12 +51,24 @@ export const OperationPage = () => {
   };
   return (
     <div className={`${styles['operation-page']} ${styles[theme]}`}>
-      <button
-        onClick={() => navigate('/operations/new/edit', { state: { background: location } })}
-        className={`${styles['operation-page__button']}`}
-      >
-        + Добавить операцию
-      </button>
+      <div className={`${styles['operation-page__header']}`}>
+        <button
+          onClick={() => navigate('/operations/new/edit', { state: { background: location } })}
+          className={`${styles['operation-page__button']}`}
+        >
+          + Добавить операцию
+        </button>
+        <div className={`${styles['operation-page__sort']}`}>
+          <span>{t('sort_by')}:</span>
+
+          <select value={sortField} onChange={(e) => setSortField(e.target.value as SortField)}>
+            <option value="createdAt">{t('operation_creation_date')}</option>
+            <option value="name">{t('operation_name_cap')}</option>
+          </select>
+
+          <button onClick={() => setAsc((value) => !value)}>{asc ? '↑' : '↓'}</button>
+        </div>
+      </div>
       <OperationList operations={operations} onView={onView} onEdit={onEdit} onDelete={onDelete} />
     </div>
   );

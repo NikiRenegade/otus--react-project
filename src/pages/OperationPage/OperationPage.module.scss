@@ -15,6 +15,47 @@
     color: $color-text-dark;
   }
 
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 40px;
+    margin: 16px 0;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+  }
+  &__sort {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    justify-content: center;
+
+    select {
+      padding: 8px 100px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    button {
+      padding: 8px 50px;
+      border-radius: 8px;
+      border: none;
+      font-size: 14px;
+      cursor: pointer;
+      background-color: $color-primary;
+      color: #fff;
+      transition: background 0.15s, transform 0.05s;
+
+      &:hover {
+        background-color: darken($color-primary, 8%);
+        transform: translateY(-1px);
+      }
+    }
+  }
+
   &__button {
     padding: 12px;
     font-size: 1rem;
@@ -29,4 +70,13 @@
     &:hover { background-color: darken($color-primary, 8%); transform: translateY(-1px); }
     &:disabled { opacity: .6; cursor: not-allowed; }
   }
+}
+.operation-page.dark select {
+  background: $color-bg-dark;
+  color: $color-text-dark;
+}
+
+.operation-page.light select {
+  background: $color-bg-light;
+  color: $color-text-light;
 }
