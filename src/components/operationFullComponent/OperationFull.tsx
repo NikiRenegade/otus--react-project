@@ -27,7 +27,6 @@ export function OperationFull({ name, categoryName, desc, amount, createdAt, cat
     <div className={`${styles['operation-full']} ${styles[theme]}`} data-test={theme}>
       <div className={styles['operation-full__header']} style={{ backgroundColor: categoryColor }}>
         <p className={styles['operation-full__date-time']}>{formattedDateTime}</p>
-        <button className={styles['operation-full__edit-button']}>✏️</button>
       </div>
       <div className={styles['operation-full__main']}>
         <div className={styles['operation-full__name']}>{name}</div>

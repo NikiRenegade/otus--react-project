@@ -2,6 +2,15 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { Operation } from '../entities/Operation';
 import { Category } from '../entities/Category';
 import { User } from 'src/entities/User';
+
+type SortField = 'createdAt' | 'name';
+type SortType = 'ASC' | 'DESC';
+
+interface GetOperationsParams {
+  sortingField?: SortField;
+  sortingType?: SortType;
+}
+
 interface SignUpBody {
   email: string;
   password: string;
@@ -114,10 +123,16 @@ export const api = createApi({
       }),
       invalidatesTags: ['Categories'],
     }),
-    getOperations: builder.query<GetOperationsResponse, void>({
-      query: () => ({
+    getOperations: builder.query<GetOperationsResponse, GetOperationsParams>({
+      query: ({ sortingField, sortingType }) => ({
         url: 'operations',
         method: 'GET',
+        params: {
+          sorting: JSON.stringify({
+            field: sortingField,
+            type: sortingType,
+          }),
+        },
       }),
       providesTags: ['Operations'],
     }),
